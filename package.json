@@ -27,7 +27,8 @@
   ],
   "activationEvents": [
     "onCommand:extension.showGitCommit",
-    "onCommand:extension.generateCommitByLLM"
+    "onCommand:extension.generateCommitByLLM",
+    "onCommand:extension.selectLLMModel"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -42,6 +43,11 @@
         "command": "extension.generateCommitByLLM",
         "title": "%extension.generateCommitByLLM.title%",
         "icon": "$(sparkle)"
+      },
+      {
+        "command": "extension.selectLLMModel",
+        "title": "%extension.selectLLMModel.title%",
+        "icon": "$(list-selection)"
       }
     ],
     "configuration": {

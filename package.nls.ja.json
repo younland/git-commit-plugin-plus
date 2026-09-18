@@ -39,7 +39,7 @@
     "extension.generateCommitByLLM.title": "LLM でコミットメッセージを生成",
     "extension.configuration.GitCommitPluginPlus.LLM.BaseUrl": "OpenAI 互換の API ベース URL。デフォルトはローカル Ollama のエンドポイント `http://localhost:11434/v1`。OpenAI、DeepSeek、Qwen、Kimi などの互換サービス（例: `https://api.openai.com/v1`）にも対応",
     "extension.configuration.GitCommitPluginPlus.LLM.ApiKey": "LLM サービスの API キー",
-    "extension.configuration.GitCommitPluginPlus.LLM.Model": "コミットメッセージ生成に使用するモデル名。デフォルト値 `deepseek-v4-pro`",
+    "extension.configuration.GitCommitPluginPlus.LLM.Model": "コミットメッセージ生成に使用するモデル名。デフォルト値 `deepseek-v4-pro`。`Git Commit Plugin Plus: LLM モデルを選択` コマンドでサービスからモデル一覧を取得して選択できます",
     "extension.configuration.GitCommitPluginPlus.LLM.Temperature": "LLM のサンプリング温度。`0` から `2` の間、デフォルト値 `0.5`",
     "extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage": "生成されるコミット概要と詳細の言語。ドロップダウンから選択、または `settings.json` で任意の言語を直接入力できます。デフォルト値 `简体中文`",
     "extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength": "LLM に送信する git diff の最大文字数。デフォルト値 `12000`",
@@ -49,5 +49,11 @@
     "extension.generateCommitByLLM.success": "LLM がコミットメッセージを生成しました！",
     "extension.generateCommitByLLM.noApiKey": "LLM の API キーが設定されていません。先に設定で `GitCommitPluginPlus.LLM.ApiKey` を構成してください！",
     "extension.generateCommitByLLM.noChanges": "分析する変更がありません。先にファイルをステージまたは変更してください！",
-    "extension.generateCommitByLLM.failed": "コミットメッセージの生成に失敗しました: {0}"
+    "extension.generateCommitByLLM.failed": "コミットメッセージの生成に失敗しました: {0}",
+    "extension.selectLLMModel.title": "Git Commit Plugin Plus: LLM モデルを選択",
+    "extension.selectLLMModel.progress": "LLM サービスからモデル一覧を取得中...",
+    "extension.selectLLMModel.placeholder": "モデルを選択（現在: {0}）",
+    "extension.selectLLMModel.success": "LLM モデルを `{0}` に設定しました",
+    "extension.selectLLMModel.empty": "サービスから返されたモデル一覧は空です",
+    "extension.selectLLMModel.failed": "モデル一覧の取得に失敗しました: {0}"
 }

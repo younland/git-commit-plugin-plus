@@ -109,3 +109,71 @@ export function chatCompletion(
         request.end();
     });
 }
+
+/**
+ * @description 查询服务的模型列表 Fetch available models via the OpenAI-compatible GET /models API
+ */
+export function listModels(config: LlmConfig): Promise<Array<string>> {
+    const baseUrl = config.baseUrl.replace(/\/+$/, '');
+    const url = baseUrl.endsWith('/chat/completions')
+        ? baseUrl.replace(/\/chat\/completions$/, '/models')
+        : `${baseUrl}/models`;
+
+    return new Promise<Array<string>>((resolve, reject) => {
+        const transport = url.startsWith('http://') ? http : https;
+        const request = transport.request(
+            url,
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${config.apiKey}`,
+                },
+            },
+            response => {
+                const chunks: Array<Buffer> = [];
+                response.on('data', (chunk: Buffer) => chunks.push(chunk));
+                response.on('end', () => {
+                    const body = Buffer.concat(chunks).toString('utf8');
+                    const status = response.statusCode || 0;
+                    if (status < 200 || status >= 300) {
+                        reject(
+                            new Error(
+                                `LLM request failed (HTTP ${status}): ${extractErrorMessage(body)}`,
+                            ),
+                        );
+                        return;
+                    }
+                    try {
+                        const parsed = JSON.parse(body);
+                        const pick = (item: any) =>
+                            typeof item === 'string' ? item : item && (item.id || item.name);
+                        let models: Array<string> = [];
+                        if (Array.isArray(parsed.data)) {
+                            models = parsed.data.map(pick);
+                        } else if (Array.isArray(parsed.models)) {
+                            models = parsed.models.map(pick);
+                        }
+                        resolve(
+                            models
+                                .filter(name => typeof name === 'string' && name.length > 0)
+                                .sort(),
+                        );
+                    } catch (e) {
+                        reject(new Error(`Failed to parse LLM response: ${e}`));
+                    }
+                });
+            },
+        );
+        //超时时间为秒，0 表示不超时 Timeout in seconds, 0 means no timeout
+        if (config.timeout > 0) {
+            request.setTimeout(config.timeout * 1000, () => {
+                request.abort();
+                reject(new Error('LLM request timed out'));
+            });
+        }
+        request.on('error', (error: Error) => {
+            reject(new Error(`LLM request error: ${error.message}`));
+        });
+        request.end();
+    });
+}

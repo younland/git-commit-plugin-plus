@@ -14,6 +14,8 @@ import GetCommitInputType, { CommitInputType } from './config/commit-input';
 import CommitTemplate from './config/template-type';
 import { combineMessage, GitMessage } from './config/message-combine';
 import { generateCommitMessage } from './llm/commit-generator';
+import { getLlmConfig } from './config/llm-config';
+import { listModels } from './llm/openai-client';
 
 import { localize, init } from 'vscode-nls-i18n';
 
@@ -272,6 +274,56 @@ export async function activate(context: vscode.ExtensionContext) {
         },
     );
     context.subscriptions.push(llmDisposable);
+
+    //选择 LLM 模型 Select LLM model from the service model list
+    let selectModelDisposable = vscode.commands.registerCommand(
+        'extension.selectLLMModel',
+        async () => {
+            try {
+                const config = getLlmConfig();
+                const models = await vscode.window.withProgress(
+                    {
+                        location: vscode.ProgressLocation.Notification,
+                        title: localize('extension.selectLLMModel.progress'),
+                        cancellable: false,
+                    },
+                    () => listModels(config),
+                );
+                if (models.length === 0) {
+                    vscode.window.showInformationMessage(
+                        localize('extension.selectLLMModel.empty'),
+                    );
+                    return;
+                }
+                const picked = await vscode.window.showQuickPick(models, {
+                    placeHolder: localize(
+                        'extension.selectLLMModel.placeholder',
+                        config.model,
+                    ),
+                    ignoreFocusOut: true,
+                });
+                if (picked) {
+                    await vscode.workspace
+                        .getConfiguration('GitCommitPluginPlus')
+                        .update(
+                            'LLM.Model',
+                            picked,
+                            vscode.ConfigurationTarget.Global,
+                        );
+                    vscode.window.showInformationMessage(
+                        localize('extension.selectLLMModel.success', picked),
+                    );
+                }
+            } catch (error) {
+                const errorMessage =
+                    error instanceof Error ? error.message : `${error}`;
+                vscode.window.showErrorMessage(
+                    localize('extension.selectLLMModel.failed', errorMessage),
+                );
+            }
+        },
+    );
+    context.subscriptions.push(selectModelDisposable);
 }
 
 // this method is called when your extension is deactivated

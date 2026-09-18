@@ -192,7 +192,7 @@ The plugin will automatically switch the language description based on the `vsco
       "GitCommitPluginPlus.LLM.ApiKey": "sk-xxx"
     }
     ```
--   `GitCommitPluginPlus.LLM.Model`: model name used to generate the commit message, default `deepseek-v4-pro`.
+-   `GitCommitPluginPlus.LLM.Model`: model name used to generate the commit message, default `deepseek-v4-pro`. Instead of typing it manually, you can run the command `Select LLM Model` from the command palette to fetch the model list from the configured service (`GET {BaseUrl}/models`) and pick one from a dropdown — the selection is written back to this setting automatically.
     ```json
     {
       "GitCommitPluginPlus.LLM.Model": "deepseek-v4-pro"

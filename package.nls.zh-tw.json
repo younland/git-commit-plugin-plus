@@ -39,7 +39,7 @@
     "extension.generateCommitByLLM.title": "LLM 生成提交信息",
     "extension.configuration.GitCommitPluginPlus.LLM.BaseUrl": "OpenAI 兼容的 API 地址，默認為本地 Ollama 接口 `http://localhost:11434/v1`，也支持 OpenAI、DeepSeek、通義、Kimi 等兼容服務，例如 `https://api.openai.com/v1`",
     "extension.configuration.GitCommitPluginPlus.LLM.ApiKey": "LLM 服務的 API Key",
-    "extension.configuration.GitCommitPluginPlus.LLM.Model": "生成提交信息使用的模型名稱，默認 `deepseek-v4-pro`",
+    "extension.configuration.GitCommitPluginPlus.LLM.Model": "生成提交信息使用的模型名稱，默認 `deepseek-v4-pro`。可運行命令 `Git Commit Plugin Plus: 選擇 LLM 模型` 從服務獲取模型列表並選擇",
     "extension.configuration.GitCommitPluginPlus.LLM.Temperature": "LLM 採樣溫度，取值 `0` 到 `2`，默認 `0.5`",
     "extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage": "生成的提交概述和詳情使用的語言，可從下拉列表選擇，也可在 `settings.json` 中直接填寫任意語言，默認 `简体中文`",
     "extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength": "發送給 LLM 的 git diff 最大字符數，默認 `12000`",
@@ -49,5 +49,11 @@
     "extension.generateCommitByLLM.success": "LLM 提交信息已生成！",
     "extension.generateCommitByLLM.noApiKey": "未配置 LLM ApiKey，請先在設定中配置 `GitCommitPluginPlus.LLM.ApiKey`！",
     "extension.generateCommitByLLM.noChanges": "沒有可分析的變更，請先暫存或修改文件！",
-    "extension.generateCommitByLLM.failed": "生成提交信息失敗：{0}"
+    "extension.generateCommitByLLM.failed": "生成提交信息失敗：{0}",
+    "extension.selectLLMModel.title": "Git Commit Plugin Plus: 選擇 LLM 模型",
+    "extension.selectLLMModel.progress": "正在從 LLM 服務獲取模型列表...",
+    "extension.selectLLMModel.placeholder": "選擇模型（當前：{0}）",
+    "extension.selectLLMModel.success": "LLM 模型已設置為 `{0}`",
+    "extension.selectLLMModel.empty": "服務返回的模型列表為空",
+    "extension.selectLLMModel.failed": "獲取模型列表失敗：{0}"
 }
