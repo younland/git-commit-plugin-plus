@@ -238,6 +238,10 @@ export async function activate(context: vscode.ExtensionContext) {
                     return repo.rootUri.path === uriRoot?.path;
                 });
             }
+            //生成中提示 Placeholder while generating
+            repo.inputBox.value = localize(
+                'extension.generateCommitByLLM.generating',
+            );
             try {
                 const message = await vscode.window.withProgress(
                     {
@@ -252,6 +256,8 @@ export async function activate(context: vscode.ExtensionContext) {
                     localize('extension.generateCommitByLLM.success'),
                 );
             } catch (error) {
+                //失败时清空提交信息 Clear the input box on failure
+                repo.inputBox.value = '';
                 const errorMessage =
                     error instanceof Error ? error.message : `${error}`;
                 if (errorMessage === 'NO_API_KEY') {

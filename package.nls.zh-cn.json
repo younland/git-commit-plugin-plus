@@ -46,6 +46,7 @@
     "extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt": "追加到 LLM 提示词中的个性化要求，例如提交风格偏好",
     "extension.configuration.GitCommitPluginPlus.LLM.Timeout": "LLM 请求超时时间（秒），`0` 表示不超时，默认 `0`",
     "extension.generateCommitByLLM.progress": "正在通过 LLM 生成提交信息...",
+    "extension.generateCommitByLLM.generating": "正在生成提交信息...",
     "extension.generateCommitByLLM.success": "LLM 提交信息已生成！",
     "extension.generateCommitByLLM.noApiKey": "未配置 LLM ApiKey，请先在设置中配置 `GitCommitPluginPlus.LLM.ApiKey`！",
     "extension.generateCommitByLLM.noChanges": "没有可分析的变更，请先暂存或修改文件！",
