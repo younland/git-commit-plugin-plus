@@ -1,14 +1,14 @@
-# Git Commit Plugin For VS Code
+# Git Commit Plugin Plus For VS Code
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-> Automatically generate git commit messages
+> Automatically generate git commit messages, with LLM-powered commit message generation
 
-![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/redjue.git-commit-plugin)
-![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/redjue.git-commit-plugin)
-![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/redjue.git-commit-plugin)
-![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/redjue.git-commit-plugin)
-![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/redjue.git-commit-plugin)
+![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/redjue.git-commit-plugin-plus)
+![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/redjue.git-commit-plugin-plus)
+![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/redjue.git-commit-plugin-plus)
+![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/redjue.git-commit-plugin-plus)
+![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/redjue.git-commit-plugin-plus)
 ![GitHub contributors](https://img.shields.io/github/contributors/RedJue/git-commit-plugin)
 ![GitHub last commit](https://img.shields.io/github/last-commit/RedJue/git-commit-plugin)
 ![GitHub](https://img.shields.io/github/license/RedJue/git-commit-plugin?color=green)
@@ -82,6 +82,25 @@ A detailed explanation can be found in this [document](https://docs.google.com/d
 1. Enter the commit information, which automatically generates a commit message that conforms to the specification
     ![edit](/assets/edit.gif)
 
+## LLM Commit Message Generation
+
+The extension can analyze your git changes (staged diff, falling back to unstaged changes) with an LLM and generate a commit message that follows this extension's commit convention: the commit type list (including `CustomCommitType`), the active commit template, the `MaxSubjectCharacters` limit and the emoji setting.
+
+The LLM only returns structured fields (`type` / `scope` / `subject` / `body` / `footer`), and the final message is rendered locally with your commit template, so custom templates are fully supported. The body is always formatted as `- ` bullet lines.
+
+1. Configure the LLM settings (see [Settings Options](#settings-options)), at minimum `GitCommitPluginPlus.LLM.ApiKey`
+1. Stage your changes (or just modify files)
+1. Click the ✨ icon on the git plugin navigation bar, or run the command `Generate Commit Message by LLM` from the command palette
+1. The generated message is filled into the SCM input box directly
+
+The default configuration targets a local [Ollama](https://ollama.com/) service (`http://localhost:11434/v1`). Any OpenAI-compatible service works too, e.g.:
+
+- OpenAI: `https://api.openai.com/v1`
+- DeepSeek: `https://api.deepseek.com/v1`
+- Kimi: `https://api.moonshot.cn/v1`
+
+> Note: Ollama does not validate the API key, but `GitCommitPluginPlus.LLM.ApiKey` must be non-empty (any value such as `ollama` works). Make sure `GitCommitPluginPlus.LLM.Model` matches a model available on your service.
+
 ## Locale Support
 The plugin will automatically switch the language description based on the `vscode` language environment.
 
@@ -94,16 +113,16 @@ The plugin will automatically switch the language description based on the `vsco
 
 ## Settings Options
 
--   `GitCommitPlugin.ShowEmoji`: whether to show emoji, default `true`.
+-   `GitCommitPluginPlus.ShowEmoji`: whether to show emoji, default `true`.
     ```json
     {
-      "GitCommitPlugin.ShowEmoji": true
+      "GitCommitPluginPlus.ShowEmoji": true
     }
     ```
--   `GitCommitPlugin.CustomCommitType`: customize the commit type, default `null`.
+-   `GitCommitPluginPlus.CustomCommitType`: customize the commit type, default `null`.
     ```json5
     { 
-      "GitCommitPlugin.CustomCommitType": [
+      "GitCommitPluginPlus.CustomCommitType": [
         "customTypeName"
       ]
     }
@@ -120,22 +139,34 @@ The plugin will automatically switch the language description based on the `vsco
        }
     ]
     ```
--   `GitCommitPlugin.MaxSubjectCharacters`: customize the maximum number of words on the subject, default `20`.
+-   `GitCommitPluginPlus.MaxSubjectCharacters`: customize the maximum number of words on the subject, default `50`.
     ```json
     {
-      "GitCommitPlugin.MaxSubjectCharacters": 20
+      "GitCommitPluginPlus.MaxSubjectCharacters": 50
     }
     ```
--  `GitCommitPlugin.FillSubjectWithCurrent`: whether to fill the subject with the current commit message, default `false`.
+-   `GitCommitPluginPlus.ShowTemplateButton`: whether to show the `show git commit template` button on the Source Control title bar, default `true`.
     ```json
     {
-      "GitCommitPlugin.FillSubjectWithCurrent": false
+      "GitCommitPluginPlus.ShowTemplateButton": true
     }
     ```
--   `GitCommitPlugin.Template`: customize the git commit template.
+-   `GitCommitPluginPlus.ShowLLMButton`: whether to show the `Generate Commit Message by LLM` button on the Source Control title bar, default `true`.
+    ```json
+    {
+      "GitCommitPluginPlus.ShowLLMButton": true
+    }
+    ```
+-  `GitCommitPluginPlus.FillSubjectWithCurrent`: whether to fill the subject with the current commit message, default `false`.
+    ```json
+    {
+      "GitCommitPluginPlus.FillSubjectWithCurrent": false
+    }
+    ```
+-   `GitCommitPluginPlus.Template`: customize the git commit template.
     ```json5
     {
-      "GitCommitPlugin.Templates": [
+      "GitCommitPluginPlus.Templates": [
         {
             "templateName": "Angular",
             "templateContent": "<icon><space><type>(<scope>):<space><subject><enter><body><enter><footer>"
@@ -147,6 +178,48 @@ The plugin will automatically switch the language description based on the `vsco
             "default":true
         }
       ]
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.BaseUrl`: OpenAI-compatible API base URL, default is the local Ollama endpoint `http://localhost:11434/v1`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.BaseUrl": "http://localhost:11434/v1"
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.ApiKey`: API key of the LLM service, default `""` (must be configured before LLM generation; any non-empty value works for Ollama).
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.ApiKey": "sk-xxx"
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.Model`: model name used to generate the commit message, default `deepseek-v4-pro`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.Model": "deepseek-v4-pro"
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.Temperature`: sampling temperature of the LLM, between `0` and `2`, default `0.5`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.Temperature": 0.5
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.ResponseLanguage`: language of the generated commit subject and body. Select from the dropdown, or enter any language directly in `settings.json`, default `简体中文`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.ResponseLanguage": "简体中文"
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.MaxDiffLength`: maximum characters of the git diff sent to the LLM, default `12000`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.MaxDiffLength": 12000
+    }
+    ```
+-   `GitCommitPluginPlus.LLM.CustomPrompt`: extra preferences appended to the LLM prompt, e.g. commit style requirements, default `""`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.CustomPrompt": "Use concise commit messages"
     }
     ```
 

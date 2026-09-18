@@ -10,11 +10,11 @@ export interface CommitType extends QuickPickItem {
 }
 //是否展现 Emoji图标 show Emoji or not
 const isShowEmoji = workspace
-    .getConfiguration('GitCommitPlugin')
+    .getConfiguration('GitCommitPluginPlus')
     .get<boolean>('ShowEmoji');
 //新增的自定义commit type add custom Commit Type
 const CustomCommitType = workspace
-    .getConfiguration('GitCommitPlugin')
+    .getConfiguration('GitCommitPluginPlus')
     .get<boolean>('CustomCommitType');
 
 export default function GetCommitTypes() {

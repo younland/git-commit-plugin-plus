@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.6.0]
+-   ✨ Feat: generate commit message by LLM (OpenAI-compatible API, e.g. Ollama / OpenAI / DeepSeek / Kimi), rendered locally with the configured commit template and commit types
+-   ✨ Feat: new settings `GitCommitPluginPlus.LLM.*` (BaseUrl / ApiKey / Model / Temperature / ResponseLanguage / MaxDiffLength / CustomPrompt)
+-   ✨ Feat: new settings `GitCommitPluginPlus.ShowTemplateButton` and `GitCommitPluginPlus.ShowLLMButton` to toggle the Source Control title bar buttons
+-   📃Docs: rename extension to `git-commit-plugin-plus`
+-   🐳Chore: `GitCommitPluginPlus.MaxSubjectCharacters` default changed from `20` to `50`
+
 ## [1.5.0]
 -   ✨ Feat: [adding \<br\> allows line breaks to be displayed](https://github.com/RedJue/git-commit-plugin/commit/afd6e136f145f0366c15a2cc5faa9befd6a379e7)
 ## [1.4.0]

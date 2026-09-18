@@ -13,7 +13,7 @@ export interface CommitTemplateType extends QuickPickItem {
     default?:boolean;
 }
 let CommitTemplate: Array<CommitTemplateType> = new Array<CommitTemplateType>();
-const configTemplate = workspace.getConfiguration('GitCommitPlugin').get<Array<CommitTemplateType>>('Templates');
+const configTemplate = workspace.getConfiguration('GitCommitPluginPlus').get<Array<CommitTemplateType>>('Templates');
 if (Array.isArray(configTemplate)) {
     CommitTemplate = configTemplate.map((item, index) => {
         return {

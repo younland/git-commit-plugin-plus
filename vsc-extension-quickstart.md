@@ -2,17 +2,22 @@
 
 ## What's in the folder
 
-* This folder contains all of the files necessary for your extension.
-* `package.json` - this is the manifest file in which you declare your extension and command.
-  * The sample plugin registers a command and defines its title and command name. With this information VS Code can show the command in the command palette. It doesn’t yet need to load the plugin.
-* `src/extension.ts` - this is the main file where you will provide the implementation of your command.
-  * The file exports one function, `activate`, which is called the very first time your extension is activated (in this case by executing the command). Inside the `activate` function we call `registerCommand`.
-  * We pass the function containing the implementation of the command as the second parameter to `registerCommand`.
+* This folder contains all of the files necessary for your extension `git-commit-plugin-plus`.
+* `package.json` - this is the manifest file in which you declare your extension and commands.
+  * The plugin registers two commands: `extension.showGitCommit` (open the commit message wizard) and `extension.generateCommitByLLM` (generate a commit message with an LLM), both shown on the Source Control title bar.
+* `src/extension.ts` - this is the main file where the commands are registered and implemented.
+* `src/config/` - configuration modules: commit types, templates, input options, LLM settings (`llm-config.ts`) and the shared template renderer (`message-combine.ts`).
+* `src/llm/` - LLM generation pipeline:
+  * `openai-client.ts` - minimal OpenAI-compatible chat completion client (Node `http`/`https`, no extra dependencies)
+  * `git-context.ts` - collects the staged (fallback: unstaged) diff and recent commits, with diff trimming for the prompt
+  * `prompt-builder.ts` - builds the system/user prompts, injecting the project's commit convention (allowed types, template, subject limit)
+  * `commit-generator.ts` - orchestration: calls the LLM, parses the JSON fields leniently, normalizes them and renders the final message with the local template
 
 ## Get up and running straight away
 
 * Press `F5` to open a new window with your extension loaded.
-* Run your command from the command palette by pressing (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and typing `Hello World`.
+* Run the commands from the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac): `show git commit template` or `Generate Commit Message by LLM`.
+* For the LLM command, configure `GitCommitPluginPlus.LLM.BaseUrl` / `GitCommitPluginPlus.LLM.ApiKey` / `GitCommitPluginPlus.LLM.Model` in settings first (the default targets a local Ollama service).
 * Set breakpoints in your code inside `src/extension.ts` to debug your extension.
 * Find output from your extension in the debug console.
 
@@ -20,7 +25,6 @@
 
 * You can relaunch the extension from the debug toolbar after changing code in `src/extension.ts`.
 * You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
-
 
 ## Explore the API
 

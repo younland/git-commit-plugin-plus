@@ -12,18 +12,8 @@ import {
 } from './config/commit-detail';
 import GetCommitInputType, { CommitInputType } from './config/commit-input';
 import CommitTemplate from './config/template-type';
-import { Angular } from './config/default-temp';
-export interface GitMessage {
-    [index: string]: string;
-    templateName: string;
-    templateContent: string;
-    icon: string;
-    type: string;
-    scope: string;
-    subject: string;
-    body: string;
-    footer: string;
-}
+import { combineMessage, GitMessage } from './config/message-combine';
+import { generateCommitMessage } from './llm/commit-generator';
 
 import { localize, init } from 'vscode-nls-i18n';
 
@@ -59,39 +49,6 @@ export async function activate(context: vscode.ExtensionContext) {
             return item;
         });
     }
-    //组合信息 Portfolio information
-    function messageCombine(config: GitMessage) {
-        let result = config.templateContent || Angular.templateContent;
-        result = config.icon
-            ? result.replace(/<icon>/g, config.icon)
-            : result.replace(/<icon>/g, '');
-        result =
-            config.type !== ''
-                ? result.replace(/<type>/g, config.type)
-                : result.replace(/<type>/g, '');
-        result =
-            config.scope !== ''
-                ? result.replace(/<scope>/g, config.scope)
-                : result.replace(/\(?<scope>\)?/g, '');
-        result =
-            config.subject !== ''
-                ? result.replace(/<subject>/g, config.subject)
-                : result.replace(/<subject>/g, '');
-        result =
-            config.body !== ''
-                ? result.replace(/<body>/g, config.body)
-                : result.replace(/<body>/g, '');
-        result =
-            config.footer !== ''
-                ? result.replace(/<footer>/g, config.footer)
-                : result.replace(/<footer>/g, '');
-        result = result.replace(/<enter>/g, '\n\n');
-        result = result.replace(/<space>/g, ' ');
-        result = result.replace(/<br>/g, '\n');
-        
-        return result.trim();
-    }
-
     const gitExtension = await getGitExtension();
 
     if (!gitExtension?.enabled) {
@@ -136,7 +93,7 @@ export async function activate(context: vscode.ExtensionContext) {
     };
     //拷贝提交信息 Copy commit message
     const copyMessage = () => {
-        vscode.env.clipboard.writeText(messageCombine(message_config));
+        vscode.env.clipboard.writeText(combineMessage(message_config));
         vscode.window.showInformationMessage(
             localize('extension.commitDetailType.message.copy.tip'),
             ...['ok'],
@@ -153,7 +110,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 message_config.templateContent = defaultTemp.templateContent;
             }
         }
-        repo.inputBox.value = messageCombine(message_config);
+        repo.inputBox.value = combineMessage(message_config);
     };
     // 递归输入信息 Recursive input message
     const recursiveInputMessage = (startMessageInput?: () => void) => {
@@ -267,6 +224,54 @@ export async function activate(context: vscode.ExtensionContext) {
         },
     );
     context.subscriptions.push(disposable);
+
+    //LLM 自动生成提交信息 Generate commit message by LLM
+    let llmDisposable = vscode.commands.registerCommand(
+        'extension.generateCommitByLLM',
+        async (uri?) => {
+            if (uri) {
+                //如果有多个repo 寻找当前的 进行填充 If there are multiple repos looking for the current to populate
+                repo = gitExtension.getAPI(1).repositories.find(repo => {
+                    const uriRoot = uri._rootUri ? uri._rootUri : uri.rootUri;
+                    return repo.rootUri.path === uriRoot?.path;
+                });
+            }
+            try {
+                const message = await vscode.window.withProgress(
+                    {
+                        location: vscode.ProgressLocation.Notification,
+                        title: localize('extension.generateCommitByLLM.progress'),
+                        cancellable: false,
+                    },
+                    () => generateCommitMessage(repo),
+                );
+                repo.inputBox.value = message;
+                vscode.window.showInformationMessage(
+                    localize('extension.generateCommitByLLM.success'),
+                );
+            } catch (error) {
+                const errorMessage =
+                    error instanceof Error ? error.message : `${error}`;
+                if (errorMessage === 'NO_API_KEY') {
+                    vscode.window.showErrorMessage(
+                        localize('extension.generateCommitByLLM.noApiKey'),
+                    );
+                } else if (errorMessage === 'NO_CHANGES') {
+                    vscode.window.showErrorMessage(
+                        localize('extension.generateCommitByLLM.noChanges'),
+                    );
+                } else {
+                    vscode.window.showErrorMessage(
+                        localize(
+                            'extension.generateCommitByLLM.failed',
+                            errorMessage,
+                        ),
+                    );
+                }
+            }
+        },
+    );
+    context.subscriptions.push(llmDisposable);
 }
 
 // this method is called when your extension is deactivated

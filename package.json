@@ -1,8 +1,8 @@
 {
-    "name": "git-commit-plugin",
-    "displayName": "git-commit-plugin",
-    "description": "Automatically generate git commit",
-    "version": "1.5.0",
+    "name": "git-commit-plugin-plus",
+    "displayName": "git-commit-plugin-plus",
+    "description": "Automatically generate git commit, with LLM-powered commit message generation",
+    "version": "1.6.0",
     "engines": {
         "vscode": "^1.42.0"
     },
@@ -26,7 +26,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.showGitCommit"
+        "onCommand:extension.showGitCommit",
+        "onCommand:extension.generateCommitByLLM"
     ],
     "main": "./out/extension.js",
     "contributes": {
@@ -36,18 +37,33 @@
                 "title": "%extension.showGitCommit.title%",
                 "placeholer": "%extension.showGitCommit.placeholder%",
                 "icon": "$(octoface)"
+            },
+            {
+                "command": "extension.generateCommitByLLM",
+                "title": "%extension.generateCommitByLLM.title%",
+                "icon": "$(sparkle)"
             }
         ],
         "configuration": {
             "type": "object",
-            "title": "Git Commit Plugin",
+            "title": "Git Commit Plugin Plus",
             "properties": {
-                "GitCommitPlugin.ShowEmoji": {
+                "GitCommitPluginPlus.ShowEmoji": {
                     "type": "boolean",
                     "default": true,
-                    "markdownDescription": "%extension.configuration.GitCommitPlugin.ShowEmoji.markdownDescription%"
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowEmoji.markdownDescription%"
                 },
-                "GitCommitPlugin.CustomCommitType": {
+                "GitCommitPluginPlus.ShowTemplateButton": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowTemplateButton%"
+                },
+                "GitCommitPluginPlus.ShowLLMButton": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowLLMButton%"
+                },
+                "GitCommitPluginPlus.CustomCommitType": {
                     "type": "array",
                     "default": [],
                     "items": {
@@ -56,23 +72,23 @@
                             "string"
                         ]
                     },
-                    "markdownDescription": "%extension.configuration.GitCommitPlugin.CustomCommitType.markdownDescription%",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.CustomCommitType.markdownDescription%",
                     "scope": "resource"
                 },
-                "GitCommitPlugin.MaxSubjectCharacters": {
+                "GitCommitPluginPlus.MaxSubjectCharacters": {
                     "type": "number",
-                    "default": 20,
-                    "markdownDescription": "%extension.configuration.GitCommitPlugin.GitCommitPlugin.MaxSubjectCharacters%"
+                    "default": 50,
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.MaxSubjectCharacters%"
                 },
-                "GitCommitPlugin.FillSubjectWithCurrent": {
+                "GitCommitPluginPlus.FillSubjectWithCurrent": {
                     "type": "boolean",
                     "default": false,
-                    "markdownDescription": "%extension.configuration.GitCommitPlugin.GitCommitPlugin.FillSubjectWithCurrent%"
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.FillSubjectWithCurrent%"
                 },
-                "GitCommitPlugin.Templates": {
+                "GitCommitPluginPlus.Templates": {
                     "type": "array",
                     "default": [],
-                    "markdownDescription": "%extension.configuration.GitCommitPlugin.GitCommitPlugin.Templates%",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.Templates%",
                     "items": [
                         {
                             "templateName": "Angular",
@@ -83,15 +99,68 @@
                             "templateContent": "<type>(<scope>):<space><icon><space><subject><enter><body><enter><footer>"
                         }
                     ]
+                },
+                "GitCommitPluginPlus.LLM.BaseUrl": {
+                    "type": "string",
+                    "default": "http://localhost:11434/v1",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.BaseUrl%"
+                },
+                "GitCommitPluginPlus.LLM.ApiKey": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ApiKey%"
+                },
+                "GitCommitPluginPlus.LLM.Model": {
+                    "type": "string",
+                    "default": "deepseek-v4-pro",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Model%"
+                },
+                "GitCommitPluginPlus.LLM.Temperature": {
+                    "type": "number",
+                    "default": 0.5,
+                    "minimum": 0,
+                    "maximum": 2,
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Temperature%"
+                },
+                "GitCommitPluginPlus.LLM.ResponseLanguage": {
+                    "type": "string",
+                    "default": "简体中文",
+                    "enum": [
+                        "简体中文",
+                        "繁体中文",
+                        "English",
+                        "日本語",
+                        "한국어",
+                        "Français",
+                        "Deutsch",
+                        "Español",
+                        "Русский"
+                    ],
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage%"
+                },
+                "GitCommitPluginPlus.LLM.MaxDiffLength": {
+                    "type": "number",
+                    "default": 12000,
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength%"
+                },
+                "GitCommitPluginPlus.LLM.CustomPrompt": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt%"
                 }
             }
         },
         "menus": {
             "scm/title": [
                 {
-                    "when": "scmProvider == git",
+                    "when": "scmProvider == git && config.GitCommitPluginPlus.ShowTemplateButton",
                     "command": "extension.showGitCommit",
                     "group": "navigation"
+                },
+                {
+                    "when": "scmProvider == git && config.GitCommitPluginPlus.ShowLLMButton",
+                    "command": "extension.generateCommitByLLM",
+                    "group": "navigation@1"
                 }
             ]
         }
