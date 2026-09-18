@@ -2,8 +2,6 @@ import * as http from 'http';
 import * as https from 'https';
 import { LlmConfig } from '../config/llm-config';
 
-const REQUEST_TIMEOUT = 30000;
-
 function extractContent(content: unknown): string {
     if (typeof content === 'string') {
         return content;
@@ -97,10 +95,13 @@ export function chatCompletion(
                 });
             },
         );
-        request.setTimeout(REQUEST_TIMEOUT, () => {
-            request.abort();
-            reject(new Error('LLM request timed out'));
-        });
+        //超时时间为秒，0 表示不超时 Timeout in seconds, 0 means no timeout
+        if (config.timeout > 0) {
+            request.setTimeout(config.timeout * 1000, () => {
+                request.abort();
+                reject(new Error('LLM request timed out'));
+            });
+        }
         request.on('error', (error: Error) => {
             reject(new Error(`LLM request error: ${error.message}`));
         });

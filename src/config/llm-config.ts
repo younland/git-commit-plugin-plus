@@ -11,6 +11,7 @@ export interface LlmConfig {
     responseLanguage: string;
     maxDiffLength: number;
     customPrompt: string;
+    timeout: number;
 }
 
 export function getLlmConfig(): LlmConfig {
@@ -23,5 +24,6 @@ export function getLlmConfig(): LlmConfig {
         responseLanguage: config.get<string>('LLM.ResponseLanguage') || '简体中文',
         maxDiffLength: config.get<number>('LLM.MaxDiffLength') || 12000,
         customPrompt: config.get<string>('LLM.CustomPrompt') || '',
+        timeout: config.get<number>('LLM.Timeout') || 0,
     };
 }

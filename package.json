@@ -1,194 +1,200 @@
 {
-    "name": "git-commit-plugin-plus",
-    "displayName": "git-commit-plugin-plus",
-    "description": "Automatically generate git commit, with LLM-powered commit message generation",
-    "version": "1.6.0",
-    "engines": {
-        "vscode": "^1.42.0"
-    },
-    "publisher": "redjue",
-    "license": "MIT",
-    "homepage": "https://github.com/RedJue/git-commit-plugin/blob/master/README.md",
-    "bugs": {
-        "url": "https://github.com/RedJue/git-commit-plugin/issues"
-    },
-    "icon": "assets/logo.png",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/RedJue/git-commit-plugin"
-    },
-    "keywords": [
-        "git",
-        "commit",
-        "vscode"
+  "name": "git-commit-plugin-plus",
+  "displayName": "git-commit-plugin-plus",
+  "description": "Automatically generate git commit, with LLM-powered commit message generation",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.42.0"
+  },
+  "publisher": "younland",
+  "license": "MIT",
+  "homepage": "https://github.com/younland/git-commit-plugin-plus/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/younland/git-commit-plugin-plus/issues"
+  },
+  "icon": "assets/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/younland/git-commit-plugin-plus"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "vscode"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.showGitCommit",
+    "onCommand:extension.generateCommitByLLM"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.showGitCommit",
+        "title": "%extension.showGitCommit.title%",
+        "placeholer": "%extension.showGitCommit.placeholder%",
+        "icon": "$(octoface)"
+      },
+      {
+        "command": "extension.generateCommitByLLM",
+        "title": "%extension.generateCommitByLLM.title%",
+        "icon": "$(sparkle)"
+      }
     ],
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.showGitCommit",
-        "onCommand:extension.generateCommitByLLM"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "commands": [
+    "configuration": {
+      "type": "object",
+      "title": "Git Commit Plugin Plus",
+      "properties": {
+        "GitCommitPluginPlus.ShowEmoji": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowEmoji.markdownDescription%"
+        },
+        "GitCommitPluginPlus.ShowTemplateButton": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowTemplateButton%"
+        },
+        "GitCommitPluginPlus.ShowLLMButton": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowLLMButton%"
+        },
+        "GitCommitPluginPlus.CustomCommitType": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": [
+              "object",
+              "string"
+            ]
+          },
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.CustomCommitType.markdownDescription%",
+          "scope": "resource"
+        },
+        "GitCommitPluginPlus.MaxSubjectCharacters": {
+          "type": "number",
+          "default": 50,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.MaxSubjectCharacters%"
+        },
+        "GitCommitPluginPlus.FillSubjectWithCurrent": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.FillSubjectWithCurrent%"
+        },
+        "GitCommitPluginPlus.Templates": {
+          "type": "array",
+          "default": [],
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.Templates%",
+          "items": [
             {
-                "command": "extension.showGitCommit",
-                "title": "%extension.showGitCommit.title%",
-                "placeholer": "%extension.showGitCommit.placeholder%",
-                "icon": "$(octoface)"
+              "templateName": "Angular",
+              "templateContent": "<icon><space><type>(<scope>):<space><subject><enter><body><enter><footer>"
             },
             {
-                "command": "extension.generateCommitByLLM",
-                "title": "%extension.generateCommitByLLM.title%",
-                "icon": "$(sparkle)"
+              "templateName": "git-cz",
+              "templateContent": "<type>(<scope>):<space><icon><space><subject><enter><body><enter><footer>"
             }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "Git Commit Plugin Plus",
-            "properties": {
-                "GitCommitPluginPlus.ShowEmoji": {
-                    "type": "boolean",
-                    "default": true,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowEmoji.markdownDescription%"
-                },
-                "GitCommitPluginPlus.ShowTemplateButton": {
-                    "type": "boolean",
-                    "default": true,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowTemplateButton%"
-                },
-                "GitCommitPluginPlus.ShowLLMButton": {
-                    "type": "boolean",
-                    "default": true,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.ShowLLMButton%"
-                },
-                "GitCommitPluginPlus.CustomCommitType": {
-                    "type": "array",
-                    "default": [],
-                    "items": {
-                        "type": [
-                            "object",
-                            "string"
-                        ]
-                    },
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.CustomCommitType.markdownDescription%",
-                    "scope": "resource"
-                },
-                "GitCommitPluginPlus.MaxSubjectCharacters": {
-                    "type": "number",
-                    "default": 50,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.MaxSubjectCharacters%"
-                },
-                "GitCommitPluginPlus.FillSubjectWithCurrent": {
-                    "type": "boolean",
-                    "default": false,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.FillSubjectWithCurrent%"
-                },
-                "GitCommitPluginPlus.Templates": {
-                    "type": "array",
-                    "default": [],
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.GitCommitPluginPlus.Templates%",
-                    "items": [
-                        {
-                            "templateName": "Angular",
-                            "templateContent": "<icon><space><type>(<scope>):<space><subject><enter><body><enter><footer>"
-                        },
-                        {
-                            "templateName": "git-cz",
-                            "templateContent": "<type>(<scope>):<space><icon><space><subject><enter><body><enter><footer>"
-                        }
-                    ]
-                },
-                "GitCommitPluginPlus.LLM.BaseUrl": {
-                    "type": "string",
-                    "default": "http://localhost:11434/v1",
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.BaseUrl%"
-                },
-                "GitCommitPluginPlus.LLM.ApiKey": {
-                    "type": "string",
-                    "default": "",
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ApiKey%"
-                },
-                "GitCommitPluginPlus.LLM.Model": {
-                    "type": "string",
-                    "default": "deepseek-v4-pro",
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Model%"
-                },
-                "GitCommitPluginPlus.LLM.Temperature": {
-                    "type": "number",
-                    "default": 0.5,
-                    "minimum": 0,
-                    "maximum": 2,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Temperature%"
-                },
-                "GitCommitPluginPlus.LLM.ResponseLanguage": {
-                    "type": "string",
-                    "default": "简体中文",
-                    "enum": [
-                        "简体中文",
-                        "繁体中文",
-                        "English",
-                        "日本語",
-                        "한국어",
-                        "Français",
-                        "Deutsch",
-                        "Español",
-                        "Русский"
-                    ],
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage%"
-                },
-                "GitCommitPluginPlus.LLM.MaxDiffLength": {
-                    "type": "number",
-                    "default": 12000,
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength%"
-                },
-                "GitCommitPluginPlus.LLM.CustomPrompt": {
-                    "type": "string",
-                    "default": "",
-                    "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt%"
-                }
-            }
+          ]
         },
-        "menus": {
-            "scm/title": [
-                {
-                    "when": "scmProvider == git && config.GitCommitPluginPlus.ShowTemplateButton",
-                    "command": "extension.showGitCommit",
-                    "group": "navigation"
-                },
-                {
-                    "when": "scmProvider == git && config.GitCommitPluginPlus.ShowLLMButton",
-                    "command": "extension.generateCommitByLLM",
-                    "group": "navigation@1"
-                }
-            ]
+        "GitCommitPluginPlus.LLM.BaseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434/v1",
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.BaseUrl%"
+        },
+        "GitCommitPluginPlus.LLM.ApiKey": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ApiKey%"
+        },
+        "GitCommitPluginPlus.LLM.Model": {
+          "type": "string",
+          "default": "deepseek-v4-pro",
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Model%"
+        },
+        "GitCommitPluginPlus.LLM.Temperature": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 2,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Temperature%"
+        },
+        "GitCommitPluginPlus.LLM.ResponseLanguage": {
+          "type": "string",
+          "default": "简体中文",
+          "enum": [
+            "简体中文",
+            "繁体中文",
+            "English",
+            "日本語",
+            "한국어",
+            "Français",
+            "Deutsch",
+            "Español",
+            "Русский"
+          ],
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage%"
+        },
+        "GitCommitPluginPlus.LLM.MaxDiffLength": {
+          "type": "number",
+          "default": 12000,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength%"
+        },
+        "GitCommitPluginPlus.LLM.CustomPrompt": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt%"
+        },
+        "GitCommitPluginPlus.LLM.Timeout": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "markdownDescription": "%extension.configuration.GitCommitPluginPlus.LLM.Timeout%"
         }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "lint": "eslint src --ext ts --fix",
-        "watch": "tsc -watch -p ./",
-        "build": "vsce package",
-        "pretest": "npm run compile && npm run lint",
-        "test": "node ./out/test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/glob": "^7.1.1",
-        "@types/mocha": "^7.0.1",
-        "@types/node": "^12.11.7",
-        "@types/vscode": "^1.42.0",
-        "@typescript-eslint/eslint-plugin": "^2.18.0",
-        "@typescript-eslint/parser": "^2.18.0",
-        "eslint": "^6.8.0",
-        "glob": "^7.1.6",
-        "mocha": "^7.0.1",
-        "typescript": "^3.7.5",
-        "vscode-test": "^1.3.0"
-    },
-    "dependencies": {
-        "vsce": "^1.95.0",
-        "vscode-nls-i18n": "^0.2.4"
+    "menus": {
+      "scm/title": [
+        {
+          "when": "scmProvider == git && config.GitCommitPluginPlus.ShowTemplateButton",
+          "command": "extension.showGitCommit",
+          "group": "navigation"
+        },
+        {
+          "when": "scmProvider == git && config.GitCommitPluginPlus.ShowLLMButton",
+          "command": "extension.generateCommitByLLM",
+          "group": "navigation@1"
+        }
+      ]
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts --fix",
+    "watch": "tsc -watch -p ./",
+    "build": "vsce package",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.42.0",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "eslint": "^6.8.0",
+    "glob": "^7.1.6",
+    "mocha": "^7.0.1",
+    "typescript": "^3.7.5",
+    "vscode-test": "^1.3.0"
+  },
+  "dependencies": {
+    "vsce": "^1.95.0",
+    "vscode-nls-i18n": "^0.2.4"
+  }
 }

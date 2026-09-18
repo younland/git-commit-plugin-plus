@@ -44,6 +44,7 @@
     "extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage": "生成的提交概述和詳情使用的語言，可從下拉列表選擇，也可在 `settings.json` 中直接填寫任意語言，默認 `简体中文`",
     "extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength": "發送給 LLM 的 git diff 最大字符數，默認 `12000`",
     "extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt": "追加到 LLM 提示詞中的個性化要求，例如提交風格偏好",
+    "extension.configuration.GitCommitPluginPlus.LLM.Timeout": "LLM 請求超時時間（秒），`0` 表示不超時，默認 `0`",
     "extension.generateCommitByLLM.progress": "正在通過 LLM 生成提交信息...",
     "extension.generateCommitByLLM.success": "LLM 提交信息已生成！",
     "extension.generateCommitByLLM.noApiKey": "未配置 LLM ApiKey，請先在設定中配置 `GitCommitPluginPlus.LLM.ApiKey`！",

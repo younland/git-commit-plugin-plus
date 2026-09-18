@@ -44,6 +44,7 @@
     "extension.configuration.GitCommitPluginPlus.LLM.ResponseLanguage": "生成されるコミット概要と詳細の言語。ドロップダウンから選択、または `settings.json` で任意の言語を直接入力できます。デフォルト値 `简体中文`",
     "extension.configuration.GitCommitPluginPlus.LLM.MaxDiffLength": "LLM に送信する git diff の最大文字数。デフォルト値 `12000`",
     "extension.configuration.GitCommitPluginPlus.LLM.CustomPrompt": "LLM プロンプトに追加するカスタム指示（例: コミットスタイルの要件）",
+    "extension.configuration.GitCommitPluginPlus.LLM.Timeout": "LLM リクエストのタイムアウト（秒）。`0` でタイムアウトなし。デフォルト値 `0`",
     "extension.generateCommitByLLM.progress": "LLM でコミットメッセージを生成中...",
     "extension.generateCommitByLLM.success": "LLM がコミットメッセージを生成しました！",
     "extension.generateCommitByLLM.noApiKey": "LLM の API キーが設定されていません。先に設定で `GitCommitPluginPlus.LLM.ApiKey` を構成してください！",

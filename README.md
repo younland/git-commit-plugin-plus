@@ -222,6 +222,12 @@ The plugin will automatically switch the language description based on the `vsco
       "GitCommitPluginPlus.LLM.CustomPrompt": "Use concise commit messages"
     }
     ```
+-   `GitCommitPluginPlus.LLM.Timeout`: LLM request timeout in seconds. `0` means no timeout, default `0`.
+    ```json
+    {
+      "GitCommitPluginPlus.LLM.Timeout": 60
+    }
+    ```
 
 ## License
 
