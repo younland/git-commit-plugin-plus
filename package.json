@@ -2,7 +2,7 @@
   "name": "git-commit-plugin-plus",
   "displayName": "git-commit-plugin-plus",
   "description": "Automatically generate git commit, with LLM-powered commit message generation",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.42.0"
   },
