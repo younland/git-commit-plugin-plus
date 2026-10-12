@@ -26,4 +26,4 @@ jobs:
       - run: npm run compile
 
       - name: Publish to Open VSX (trusted publishing)
-        run: npx ovsx publish --trusted-publishing
+        run: npx ovsx@1.2.0 publish --trusted-publishing
